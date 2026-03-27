@@ -13,16 +13,28 @@ jobs:
       - name: Clonar código
         uses: actions/checkout@v4
 
-      - name: Configurar Java 17 (Para Android)
+      - name: Ver archivos (Para diagnóstico)
+        run: ls -la
+
+      - name: Arreglar nombres de archivo de Android
+        run: |
+          if [ -f "main.py.txt" ]; then mv main.py.txt main.py; fi
+          if [ -f "Main.py" ]; then mv Main.py main.py; fi
+          if [ -f "MAIN.py" ]; then mv MAIN.py main.py; fi
+
+      - name: Configurar Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Instalar motor Flutter (¡Esto faltaba!)
+      - name: Instalar motor Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - name: Aceptar licencias de Android
+        run: yes | flutter doctor --android-licenses
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -34,7 +46,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install flet
 
-      - name: Compilar el APK (Tardará unos minutos)
+      - name: Compilar el APK (La magia final)
         run: flet build apk
 
       - name: Subir archivo instalable
