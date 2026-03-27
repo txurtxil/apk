@@ -13,26 +13,31 @@ jobs:
       - name: Clonar código
         uses: actions/checkout@v4
 
-      - name: Instalar Java 17 (Motor Android)
+      - name: Configurar Java 17 (Para Android)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Instalar Python 3.11
+      - name: Instalar motor Flutter (¡Esto faltaba!)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Instalar librerías
+      - name: Instalar Flet
         run: |
           python -m pip install --upgrade pip
           pip install flet
 
-      - name: Compilar APK (Esto tardará unos minutos)
+      - name: Compilar el APK (Tardará unos minutos)
         run: flet build apk
 
-      - name: Subir APK final
+      - name: Subir archivo instalable
         uses: actions/upload-artifact@v4
         with:
           name: MundoDron-APK
