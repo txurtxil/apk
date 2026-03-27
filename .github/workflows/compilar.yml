@@ -1,0 +1,33 @@
+name: Compilar APK Mundo Dron
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compilar APK con Flet
+        run: flet build apk
+
+      - name: Subir APK generado
+        uses: actions/upload-artifact@v4
+        with:
+          name: MundoDron-APK
+          path: build/apk/**/*.apk
